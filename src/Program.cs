@@ -10,10 +10,10 @@ internal static class Program {
         Console.InputEncoding  = Encoding.UTF8;
         Console.OutputEncoding = Encoding.UTF8;
         
-        if (args.Length <= 0) {
-            Shell();
-        } else if (args.Contains("--test")) {
+        if (args.Contains("--test")) {
             Test();
+        }else {
+            Shell();
         }
     }
 
@@ -46,6 +46,12 @@ internal static class Program {
     private static void Test() {
         var tests = new TestsSet(
                                [
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "a = [420, 69]", "[420, 69]" },
+                                                                               { "if a: a[1] fi", "69" }, // Fix index parsing
+                                                                           }
+                                           ),
                                    new Test(
                                             new Dictionary<string, string> {
                                                                                { "2+2", "4" },
@@ -125,7 +131,7 @@ internal static class Program {
                                                                            }
                                            ),
                                    new Test(
-                                            new Dictionary<string, string> {
+                                            new Dictionary<string, string> { 
                                                                                { "a=2", "2" },
                                                                                { "a", "2" },
                                                                                { "a+67", "69" },
@@ -146,6 +152,52 @@ internal static class Program {
                                                                                { "a=\"aboba\"", "\"aboba\"" },
                                                                                { "a[3]", "\"b\"" },
                                                                                { "a[4]", "\"a\"" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "a = 0", "0" },
+                                                                               { "if a: 34+35 fi", string.Empty },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "a = 1", "1" },
+                                                                               { "if a: 34+35 fi", "69" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "a = 1", "1" },
+                                                                               { "if a: \"aboba\"", "\"aboba\"" },
+                                                                               { "if a: 34+35 fi", "69" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "a = 1", "1" },
+                                                                               { "if a: \"aboba\" fi else: 123 fi", "\"aboba\"" },
+                                                                               { "a = 2", "2" },
+                                                                               { "if a: \"neaboba\" fi else: 123 fi", "\"neaboba\"" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "if 2+2*2 > 3: a = 5 fi else: a = 2 fi", "5" },
+                                                                               { "a", "5" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "expr = 2+2*2", "6" },
+                                                                               { "if expr > 8: a = 5 fi elif expr == 6: a = 4 fi else: a = 2 fi", "4" },
+                                                                               { "a", "4" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "if 2+2*2 > 6: a = 5 fi else: a = 2 fi", "2" },
+                                                                               { "a", "2" },
                                                                            }
                                            ),
                                    new Test(
@@ -184,8 +236,7 @@ internal static class Program {
                                                                                },
                                                                            }
                                            ),
-                               ]
-                              );
+                               ]);
 
         tests.Run();
     }

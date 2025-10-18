@@ -14,7 +14,7 @@ public class TestsSet {
 
             for (var i = 0; i < _tests.Length; i++) {
                 var test = _tests[i];
-                Console.Write($"test {(i + 1).ToString($"D{_tests.Length%10}")} - ");
+                Console.Write($"test {(i + 1).ToString($"D{_tests.Length.ToString().Length}")} - ");
                 var result = _tests[i].Run();
                 
                 if (result.Passed) {
