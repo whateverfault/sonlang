@@ -48,12 +48,6 @@ internal static class Program {
                                [
                                    new Test(
                                             new Dictionary<string, string> {
-                                                                               { "a = [420, 69]", "[420, 69]" },
-                                                                               { "if a: a[1] fi", "69" }, // Fix index parsing
-                                                                           }
-                                           ),
-                                   new Test(
-                                            new Dictionary<string, string> {
                                                                                { "2+2", "4" },
                                                                            }
                                            ),
@@ -108,6 +102,13 @@ internal static class Program {
                                                                            }
                                            ),
                                    new Test(
+                                            new Dictionary<string, string> { 
+                                                                               { "a=2", "2" },
+                                                                               { "a", "2" },
+                                                                               { "a+67", "69" },
+                                                                           }
+                                           ),
+                                   new Test(
                                             new Dictionary<string, string> {
                                                                                { "[]", "[]" },
                                                                            }
@@ -131,10 +132,18 @@ internal static class Program {
                                                                            }
                                            ),
                                    new Test(
-                                            new Dictionary<string, string> { 
-                                                                               { "a=2", "2" },
-                                                                               { "a", "2" },
-                                                                               { "a+67", "69" },
+                                            new Dictionary<string, string> {
+                                                                               { "[420, 69][0]", "420" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "\"123456789\"[3]", "\"4\"" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "\"aboba\"[5]", Errors.GetErrorString(Error.OutOfBounds) },
                                                                            }
                                            ),
                                    new Test(
@@ -169,7 +178,7 @@ internal static class Program {
                                    new Test(
                                             new Dictionary<string, string> {
                                                                                { "a = 1", "1" },
-                                                                               { "if a: \"aboba\"", "\"aboba\"" },
+                                                                               { "if a: \"aboba\" fi", "\"aboba\"" },
                                                                                { "if a: 34+35 fi", "69" },
                                                                            }
                                            ),
@@ -198,6 +207,26 @@ internal static class Program {
                                             new Dictionary<string, string> {
                                                                                { "if 2+2*2 > 6: a = 5 fi else: a = 2 fi", "2" },
                                                                                { "a", "2" },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "a = 0", "0" },
+                                                                               {
+                                                                                   "b = if a: \"if\" fi else: \"else\" fi",
+                                                                                   "\"else\""
+                                                                               },
+                                                                               { "a = 1", "1" },
+                                                                               {
+                                                                                   "if a: if b == \"else\": 123 fi fi else: 321 fi",
+                                                                                   "123"
+                                                                               },
+                                                                           }
+                                           ),
+                                   new Test(
+                                            new Dictionary<string, string> {
+                                                                               { "a = [420, 69]", "[420, 69]" },
+                                                                               { "if a: a[1] fi", "69" },
                                                                            }
                                            ),
                                    new Test(
