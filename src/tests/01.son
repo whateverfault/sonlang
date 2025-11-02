@@ -1,0 +1,12 @@
+a = 0;
+                                                  
+b = if a: "if" else: "else" end
+a = 1;
+
+if a:
+    if b == "else": 
+        123 
+    end 
+else: 
+    321
+end
